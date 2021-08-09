@@ -1,0 +1,19 @@
+TUTORIAL MATERIAL
+https://github.com/fhsinchy/the-docker-handbook
+https://github.com/fhsinchy/docker-handbook-projects/
+
+general syntax
+    $ docker <object-type> <command> <options>
+    object-type: container, image, network, volume
+container publish ports
+    $ ... --publish <host port>:<container port>
+container attach volume
+    $ ... --volume <local file system directory absolute path>:<container file system directory absolute path>:<read write access>
+image assign tag (=name)
+    $ ... --tag <image repository>:<image tag>
+image visualise layers
+    $ docker image history custom-nginx:packaged
+Alpine Linux
+    small image (2.8MB instead of 28MB)
+    full featured linux built on musl, libc, busybox
+    need differnt commands than on linux, e.g. apt -> apk
