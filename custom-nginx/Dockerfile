@@ -1,28 +1,22 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
 EXPOSE 80
-
-RUN apt-get update && \
-    apt-get install build-essential \
-                    libpcre3 \
-                    libpcre3-dev \
-                    zlib1g \
-                    zlib1g-dev \
-                    libssl1.1 \
-                    libssl-dev \
-                    -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
 ARG FILENAME="nginx-1.19.2"
 ARG EXTENSION="tar.gz"
 
 ADD https://nginx.org/download/${FILENAME}.${EXTENSION} .
 
-RUN tar -xvf ${FILENAME}.${EXTENSION} && \
-    rm ${FILENAME}.${EXTENSION}
-
-RUN cd ${FILENAME} && \
+RUN apk add --no-cache pcre zlib && \
+    apk add --no-cache \
+        --virtual .build-deps \
+        build-base \ 
+        pcre-dev \
+        zlib-dev \
+        openssl-dev && \
+    tar -xvf ${FILENAME}.${EXTENSION} && \
+    rm ${FILENAME}.${EXTENSION} && \
+    cd ${FILENAME} && \
     ./configure \
         --sbin-path=/usr/bin/nginx \
         --conf-path=/etc/nginx/nginx.conf \
@@ -31,15 +25,10 @@ RUN cd ${FILENAME} && \
         --with-pcre \
         --pid-path=/var/run/nginx.pid \
         --with-http_ssl_module && \
-    make && make install && \
+    make && \
+    make install && \
     cd / && \
     rm -rfv /${FILENAME} && \
-    apt-get remove build-essential \
-                    libpcre3-dev \
-                    zlib1g-dev \
-                    -y && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apk del .build-deps
 
 CMD ["nginx", "-g", "daemon off;"]
