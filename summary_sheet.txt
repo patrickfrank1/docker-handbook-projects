@@ -17,3 +17,15 @@ Alpine Linux
     small image (2.8MB instead of 28MB)
     full featured linux built on musl, libc, busybox
     need differnt commands than on linux, e.g. apt -> apk
+docker network
+    avoid acessing a container via ip:port as it changes for each container instatiation
+    network types
+        bidge       default, to be used by multiple containers
+        host        no network isolation, conainer run under host
+        none        disables networking
+        overlay     connect docker daemons across compters
+        macvlan     assign mac adressed to containers
+    user defined bridge - extra features
+        automatic dns resolution between containers
+        better isolation
+        containers can be attached/detached on the fly
